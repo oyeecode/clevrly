@@ -1,7 +1,9 @@
 // Lightweight, static-hosting friendly behaviors (no build step).
 (() => {
   const CONFIG = {
-    whatsappPhoneE164: "+910000000000", // TODO: change to your WhatsApp number
+    whatsappPhoneE164: "+919266391666",
+    // Optional alternate WhatsApp number (leave empty to hide alt button)
+    whatsappPhone2E164: "",
     whatsappDefaultMessage: "Hi Clevrly — I’d like to learn more about your services.",
     contactEmailTo: "hello@clevrly.com",
     contactEmailSubject: "New inquiry from website",
@@ -107,12 +109,17 @@
 
   // WhatsApp link wiring
   const normalizePhone = (p) => (p || "").replace(/[^\d+]/g, "");
+  const digitsOnly = (p) => normalizePhone(p).replace(/^\+/, "").replace(/[^\d]/g, "");
   const buildWhatsAppUrl = (message) => {
-    const phone = normalizePhone(CONFIG.whatsappPhoneE164);
+    const phone = digitsOnly(CONFIG.whatsappPhoneE164);
     const text = encodeURIComponent(message || CONFIG.whatsappDefaultMessage);
-    // wa.me expects digits (no +) but works with plus stripped in most cases; we force digits.
-    const digits = phone.replace(/^\+/, "");
-    return `https://wa.me/${digits}?text=${text}`;
+    return `https://wa.me/${phone}?text=${text}`;
+  };
+
+  const buildWhatsAppUrlTo = (phoneE164, message) => {
+    const phone = digitsOnly(phoneE164);
+    const text = encodeURIComponent(message || CONFIG.whatsappDefaultMessage);
+    return `https://wa.me/${phone}?text=${text}`;
   };
 
   const applyWhatsAppLinks = (message) => {
@@ -124,6 +131,110 @@
     });
   };
   applyWhatsAppLinks();
+
+  // CraftMyHome-style WhatsApp widget (static)
+  const waRoot = qs("[data-wa-widget]");
+  if (waRoot) {
+    const toggleBtn = qs("[data-wa-toggle]", waRoot);
+    const panel = qs("[data-wa-panel]", waRoot);
+    const closeBtn = qs("[data-wa-close]", waRoot);
+    const nameInput = qs("[data-wa-name]", waRoot);
+    const msgInput = qs("[data-wa-message]", waRoot);
+    const sendBtn = qs("[data-wa-send]", waRoot);
+    const sendAltBtn = qs("[data-wa-send-alt]", waRoot);
+    const altWrap = qs("[data-wa-alt]", waRoot);
+    const errorEl = qs("[data-wa-error]", waRoot);
+    const chips = qsa("[data-wa-chip]", waRoot);
+
+    const showError = (t) => {
+      if (!errorEl) return;
+      const text = String(t || "").trim();
+      errorEl.textContent = text;
+      errorEl.style.display = text ? "block" : "none";
+    };
+
+    const setExpanded = (expanded) => toggleBtn?.setAttribute("aria-expanded", expanded ? "true" : "false");
+    const openPanel = () => {
+      if (!panel) return;
+      panel.classList.add("is-open");
+      setExpanded(true);
+      showError("");
+      setTimeout(() => nameInput?.focus?.(), 0);
+    };
+    const closePanel = () => {
+      if (!panel) return;
+      panel.classList.remove("is-open");
+      setExpanded(false);
+      showError("");
+    };
+    const isOpen = () => Boolean(panel?.classList.contains("is-open"));
+
+    // Alternate number visibility
+    if (altWrap) {
+      const hasAlt = Boolean(String(CONFIG.whatsappPhone2E164 || "").trim());
+      altWrap.hidden = !hasAlt;
+    }
+
+    toggleBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (isOpen()) closePanel();
+      else openPanel();
+    });
+    closeBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      closePanel();
+    });
+
+    const buildMessage = () => {
+      const name = String(nameInput?.value || "").trim() || "(not provided)";
+      const message = String(msgInput?.value || "").trim();
+      return { name, message, text: `Name: ${name}\nMessage: ${message}` };
+    };
+
+    const sendTo = (phoneE164) => {
+      const { message, text } = buildMessage();
+      if (!message) {
+        showError("Please enter a message.");
+        msgInput?.focus?.();
+        return;
+      }
+      showError("");
+      const url = phoneE164 ? buildWhatsAppUrlTo(phoneE164, text) : buildWhatsAppUrl(text);
+      window.open(url, "_blank", "noopener,noreferrer");
+    };
+
+    sendBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      sendTo(null);
+    });
+    sendAltBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      sendTo(CONFIG.whatsappPhone2E164);
+    });
+
+    chips.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const value = String(btn.getAttribute("data-wa-chip") || "").trim();
+        if (!value) return;
+        if (!isOpen()) openPanel();
+        const current = String(msgInput?.value || "").trim();
+        if (msgInput) msgInput.value = current ? `${current}\n${value}` : value;
+        msgInput?.focus?.();
+      });
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && isOpen()) closePanel();
+    });
+    document.addEventListener("click", (e) => {
+      if (!isOpen()) return;
+      if (waRoot.contains(e.target)) return;
+      closePanel();
+    });
+
+    setExpanded(false);
+  }
 
   // Modal handling
   const openModalButtons = qsa("[data-open-modal]");

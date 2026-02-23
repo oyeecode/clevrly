@@ -308,7 +308,7 @@
               </div>
               <div class="meta-item">
                 <div class="meta-label">Phone</div>
-                <a class="link" href="tel:+910000000000">+91 00000 00000</a>
+                <a class="link" href="tel:+919266391666">+91 92663 91666</a>
               </div>
               <div class="meta-item">
                 <div class="meta-label">Location</div>
@@ -374,6 +374,15 @@
           <a class="link" href="#about">About</a>
           <a class="link" href="#contact">Contact</a>
           <a class="link" data-whatsapp-link href="#">WhatsApp</a>
+          <a class="link" href="https://www.linkedin.com/company/111839356/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="link" href="https://www.facebook.com/Clevrlydigital" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a
+            class="link"
+            href="https://www.instagram.com/clevrly_digital?igsh=cHM2MmtwODZ4N24y"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Instagram</a
+          >
           <a class="link" href="privacy.html">Privacy</a>
           <a class="link" href="cookies.html">Cookies</a>
           <button class="link link--button" type="button" data-open-modal="cookies">Cookie preferences</button>
@@ -382,10 +391,46 @@
       </div>
     </footer>
 
-    <a class="fab" href="#" data-whatsapp-link aria-label="Chat on WhatsApp">
-      <span class="fab-dot" aria-hidden="true"></span>
-      <span class="fab-text">WhatsApp</span>
-    </a>
+    <div class="wa-widget" data-wa-widget>
+      <button class="fab" type="button" aria-label="Open WhatsApp chat" aria-expanded="false" data-wa-toggle>
+        <span class="fab-dot" aria-hidden="true"></span>
+        <span class="fab-text">WhatsApp</span>
+      </button>
+
+      <div class="wa-panel" role="dialog" aria-label="WhatsApp chat" aria-modal="false" data-wa-panel>
+        <div class="wa-head">
+          <div class="wa-title">Chat with Clevrly</div>
+          <button class="wa-close" type="button" aria-label="Close" data-wa-close>×</button>
+        </div>
+        <div class="wa-body">
+          <label class="wa-field">
+            <span class="wa-label">Name (optional)</span>
+            <input class="wa-input" type="text" placeholder="Your name" autocomplete="name" data-wa-name />
+          </label>
+          <label class="wa-field">
+            <span class="wa-label">Message</span>
+            <textarea class="wa-input" rows="3" placeholder="Tell us what you need…" data-wa-message></textarea>
+          </label>
+
+          <div class="wa-chips" aria-label="Quick prompts">
+            <button class="wa-chip" type="button" data-wa-chip="I need performance marketing help.">Performance marketing</button>
+            <button class="wa-chip" type="button" data-wa-chip="I need a landing page / website.">Landing page</button>
+            <button class="wa-chip" type="button" data-wa-chip="Can you share pricing / packages?">Pricing</button>
+            <button class="wa-chip" type="button" data-wa-chip="I want to schedule a call.">Schedule a call</button>
+          </div>
+
+          <div class="wa-error" role="status" aria-live="polite" data-wa-error></div>
+
+          <div class="wa-actions">
+            <button class="btn btn--primary" type="button" data-wa-send>Send on WhatsApp</button>
+            <button class="btn btn--ghost" type="button" data-open-modal="schedule">Schedule</button>
+          </div>
+          <div class="wa-alt" data-wa-alt hidden>
+            Or send to <button class="wa-alt-btn" type="button" data-wa-send-alt>alternate number</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="schedule-title" hidden data-modal="schedule">
       <div class="modal-backdrop" data-close-modal></div>
@@ -497,7 +542,12 @@
         "name": "Clevrly",
         "slogan": "Outthink. Outperform.",
         "url": "https://example.com",
-        "email": "hello@clevrly.com"
+        "email": "hello@clevrly.com",
+        "sameAs": [
+          "https://www.linkedin.com/company/111839356/",
+          "https://www.facebook.com/Clevrlydigital",
+          "https://www.instagram.com/clevrly_digital?igsh=cHM2MmtwODZ4N24y"
+        ]
       }
     </script>
   </body>
