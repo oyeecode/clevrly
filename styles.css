@@ -98,9 +98,10 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(7, 10, 16, 0.55);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  backdrop-filter: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
 .header-inner {
@@ -124,14 +125,14 @@ textarea {
 }
 
 .nav-link {
-  color: var(--muted);
+  color: #333333;
   padding: 10px 10px;
   border-radius: 12px;
   transition: background 160ms ease, color 160ms ease;
 }
 .nav-link:hover {
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.06);
+  color: #000000;
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .nav-actions {
@@ -144,7 +145,7 @@ textarea {
 .nav-toggle {
   display: none;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(0, 0, 0, 0.16);
   border-radius: 14px;
   padding: 10px 12px;
   cursor: pointer;
@@ -167,7 +168,7 @@ textarea {
   left: 0;
   width: 22px;
   height: 2px;
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(0, 0, 0, 0.86);
   border-radius: 2px;
 }
 .nav-toggle-lines::before {
@@ -197,6 +198,18 @@ textarea {
 }
 .btn:active {
   transform: translateY(0);
+}
+
+.site-header .btn {
+  color: #111111;
+}
+.site-header .btn--ghost {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.14);
+}
+.site-header .btn--ghost:hover {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.22);
 }
 
 .btn--primary {
@@ -1153,4 +1166,3 @@ textarea {
     transition: none;
   }
 }
-

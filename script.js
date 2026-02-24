@@ -5,7 +5,7 @@
     // Optional alternate WhatsApp number (leave empty to hide alt button)
     whatsappPhone2E164: "",
     whatsappDefaultMessage: "Hi Clevrly — I’d like to learn more about your services.",
-    contactEmailTo: "hello@clevrly.com",
+    contactEmailTo: "Info@clevrly.digital",
     contactEmailSubject: "New inquiry from website",
     // Optional analytics (only loads after consent)
     // Example: "G-XXXXXXXXXX"
@@ -403,4 +403,3 @@
     });
   }
 })();
-
