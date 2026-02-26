@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+#
+# Simple dev runner for the Clevrly static site.
+# Kills any existing server on the chosen port and starts a fresh Python HTTP server.
+#
+# Usage:
+#   ./start-app                 # default: 127.0.0.1:8000
+#   ./start-app 5500            # custom port
+#   PORT=5500 ./start-app       # via env var
+#
+set -euo pipefail
+
+PORT="${1:-${PORT:-8000}}"
+BIND="${BIND:-127.0.0.1}"
+
+echo ">>> Preparing dev server on ${BIND}:${PORT}"
+
+# Kill any existing process listening on the port
+if PIDS="$(lsof -tiTCP:${PORT} -sTCP:LISTEN 2>/dev/null)"; then
+  if [ -n "${PIDS}" ]; then
+    echo ">>> Stopping existing process on port ${PORT}: ${PIDS}"
+    kill ${PIDS} || true
+    sleep 1
+    if PIDS2="$(lsof -tiTCP:${PORT} -sTCP:LISTEN 2>/dev/null)"; then
+      if [ -n "${PIDS2}" ]; then
+        echo ">>> Force killing stubborn process on ${PORT}: ${PIDS2}"
+        kill -9 ${PIDS2} || true
+      fi
+    fi
+  fi
+fi
+
+# Build a cache‑buster token for convenience
+NOCACHE="$(date +%s)"
+URL="http://${BIND}:${PORT}/?nocache=${NOCACHE}"
+
+echo ">>> Starting Python server..."
+echo ">>> URL: ${URL}"
+
+# Open browser on macOS if available
+if command -v open >/dev/null 2>&1; then
+  open "${URL}" || true
+fi
+
+# Run server in foreground (Ctrl+C to stop)
+exec python3 -m http.server "${PORT}" --bind "${BIND}"
+
